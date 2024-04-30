@@ -2,13 +2,12 @@ import "dotenv/config";
 
 export default {
   expo: {
-    name: "Expo Firebase Starter",
+    name: "Red-Door",
     slug: "expo-firebase",
     privacy: "public",
     platforms: ["ios", "android"],
     version: "0.19.0",
     orientation: "portrait",
-    icon: "./assets/flame.png",
     splash: {
       image: "./assets/splash.png",
       resizeMode: "cover",
