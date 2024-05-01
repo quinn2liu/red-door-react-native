@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Button, Text, TouchableOpacity } from "react-native";
 import { signOut } from "firebase/auth";
-
+import Footer from "../components/Footer";
 import { Images, Colors, auth } from "../config";
 
 export const HomeScreen = ({ navigation }) => {
@@ -20,33 +20,41 @@ export const HomeScreen = ({ navigation }) => {
   const viewAccountDetails = () => {
     
   }
+
+  const viewInventory = () => {
+    
+  }
   return (
     <View style={styles.container}>
 
-      <View style={styles.createMenu}>
-      <TouchableOpacity style={styles.createMenuButton} onPress={addItem}>
-        <Text style={styles.buttonText} numberOfLines={1}>+ Add Item</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.createMenuButton} onPress={viewPullLists}>
-        <Text style={styles.buttonText} numberOfLines={2}>+ Create Pull List</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.createMenuButton} onPress={viewAccountDetails}>
-        <Text style={styles.buttonText} numberOfLines={2}>+ Account Details</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.createMenuButton} onPress={addItem}>
+          <Text style={styles.buttonText} numberOfLines={1}>+ Add Item</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.createMenuButton} onPress={viewPullLists}>
+          <Text style={styles.buttonText} numberOfLines={2}>+ Create Pull List</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.createMenuButton} onPress={viewAccountDetails}>
+          <Text style={styles.buttonText} numberOfLines={2}>Account Details</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.viewInventoryButton}>
-
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.wideButton} onPress={viewInventory}>
+          <Text style={styles.buttonText}>View Inventory</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.jobListButton}>
-
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.wideButton} onPress={viewInventory}>
+          <Text style={styles.buttonText}>See Pull Lists</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>Red Door Inventory Manager</Text>
         <TouchableOpacity onPress={handleLogout} style={styles.footerText}>
-          <Text style={{color: Colors.blue}}>Sign Out</Text>
+            <Text style={{color: Colors.blue}}>Sign Out</Text>
         </TouchableOpacity> 
       </View>
     </View>
@@ -72,7 +80,7 @@ const styles = StyleSheet.create({
     color: Colors.red,
     paddingHorizontal: 4
   },
-  createMenu: {
+  buttonContainer: {
     flexDirection: 'row',
     backgroundColor: Colors.lightGray,
     padding: 12,
@@ -92,11 +100,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center', 
   },
-  viewInventoryButton: {
-
-  },
-  jobListButton: {
-
+  wideButton: {
+    backgroundColor: Colors.red,
+    padding: 12,
+    borderRadius: 8,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center', 
   },
   buttonText: {
     color: 'white',

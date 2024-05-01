@@ -37,17 +37,17 @@ export const AddItemScreen = ({ navigation }) => {
 
 
     const handleAddItem = async (values) => {
-        const { type, material } = values;
-        console.log(`type: ${type}, material: ${material}`);
-        try {
-            const docRef = await addDoc(collection(db, "furniture"), {
-              type: type,
-              primary_material: material,
-            });
-            console.log("Document written with ID: ", docRef.id);
-          } catch (e) {
-            console.error("Error adding document: ", e);
-          }
+        const { type, material, custom1 } = values;
+        console.log(`type: ${type}, material: ${material}, custom1: ${custom1}`);
+        // try {
+        //     const docRef = await addDoc(collection(db, "furniture"), {
+        //       type: type,
+        //       primary_material: material,
+        //     });
+        //     console.log("Document written with ID: ", docRef.id);
+        //   } catch (e) {
+        //     console.error("Error adding document: ", e);
+        //   }
     };
 
     const goHome = () => {
@@ -56,59 +56,52 @@ export const AddItemScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TextInput 
-                placeholder="Custom Field 1"
-                width="48%"
-            />
-            <TextInput 
-                placeholder="Custom Field 2"
-                width="48%"
-            />
-        </View>
         <Formik
-            initialValues={{ type: '',  material: ''}}
+            initialValues={{ type: '',  material: '', custom1: ''}}
             onSubmit={values => handleAddItem(values)}
         >
         {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, touched, errors }) => (
         <>
+            <TextInput
+                placeholder="Custom Field 1"
+                value={values.custom1}
+                onChangeText={item => setFieldValue('custom1', item)}
+              />
             <View style={{flexDirection: 'row', width:'51%', justifyContent: 'space-between', marginBottom:144}}>
-                <DropDownPicker
-                    open={open1}
-                    value={type}
-                    items={types}
-                    setOpen={setOpen1}
-                    setValue={setType}
-                    setItems={initializeTypes}
-                    onChangeValue={item => setFieldValue('type', item)}
-                    placeholder="Type"
-                    zIndex={3000}
-                    zIndexInverse={3000}
-                    style={{width: '95%'}}
-                />
-                <DropDownPicker
-                    open={open2}
-                    value={material}
-                    items={materials}
-                    setOpen={setOpen2}
-                    setValue={setMaterial}
-                    setItems={initMaterials}
-                    onChangeValue={item => setFieldValue('material', item)}
-                    placeholder="Material 1"
-                    zIndex={2500}
-                    zIndexInverse={2500}
-                    style={{width: '95%'}}
-                />
+              <DropDownPicker
+                  open={open1}
+                  value={type}
+                  items={types}
+                  setOpen={setOpen1}
+                  setValue={setType}
+                  setItems={initializeTypes}
+                  onChangeValue={item => setFieldValue('type', item)}
+                  placeholder="Type"
+                  zIndex={3000}
+                  zIndexInverse={3000}
+                  style={{width: '95%'}}
+              />
+              <DropDownPicker
+                  open={open2}
+                  value={material}
+                  items={materials}
+                  setOpen={setOpen2}
+                  setValue={setMaterial}
+                  setItems={initMaterials}
+                  onChangeValue={item => setFieldValue('material', item)}
+                  placeholder="Material 1"
+                  zIndex={2500}
+                  zIndexInverse={2500}
+                  style={{width: '95%'}}
+              />
             </View>
             <Button title="Submit" onPress={handleSubmit} />
         </>
         )}
         </Formik>
-        <KeyboardAwareScrollView>
-            <TouchableOpacity style={styles.createMenuButton} onPress={goHome}>
-                <Text style={styles.buttonText} numberOfLines={1}>Home</Text>
-            </TouchableOpacity>
-        </KeyboardAwareScrollView>
+        <TouchableOpacity style={styles.createMenuButton} onPress={goHome}>
+            <Text style={styles.buttonText} numberOfLines={1}>Home</Text>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -146,7 +139,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     width: '30%',
-    height: '100%',
+    height: '20%',
     justifyContent: 'center',
     alignItems: 'center', 
   },
