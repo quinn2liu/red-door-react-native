@@ -1,30 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Button } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { signOut } from "firebase/auth";
-import { TextInput } from "../components";
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Formik } from 'formik';
 import { db } from "../config/firebase";
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, getDocs } from "firebase/firestore"; 
+import { Footer } from '../components/Footer';
+import { Header } from '../components/Header';
+import { InventoryItem } from "../components/InventoryItem";
 
 import { Colors, auth } from "../config";
 
-export const AddItemScreen = ({ navigation }) => {
-    const handleLogout = () => {
-        signOut(auth).catch((error) => console.log("Error logging out: ", error));
-    };
+export const ViewInventoryScreen = ({ navigation }) => {
+  const [items, setItems] = useState([]);
 
-    const goHome = () => {
-        navigation.navigate("Home");
-    };
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getDocs(collection(db, 'furniture'));
+      setItems(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+  };
 
+    fetchData();
+  }, []);
+    
     return (
-        <>
-            <TouchableOpacity style={styles.createMenuButton} onPress={goHome}>
-                <Text style={styles.buttonText} numberOfLines={1}>Home</Text>
-            </TouchableOpacity>
-        </>
+        <View style={styles.container}>
+          <Header/>
+          <View style={styles.tableHeader}>
+            <Text style={styles.tableHeaderText}>
+              Type
+            </Text>
+            <Text style={styles.tableHeaderText}>
+              Material
+            </Text>
+            <Text style={styles.tableHeaderText}>
+              Color
+            </Text>
+            <Text style={styles.tableHeaderText}>
+              Volume
+            </Text>
+          </View>
+          {items.map(item => (
+            <View key={item.id}>
+              <InventoryItem id={item.id} type={item.type} material={item.material} length={item.length} width={item.width} height={item.height} custom={item.custom} color={item.color} />
+            </View>
+          ))}
+          <Footer/>
+        </View>   
     );
 };
 
@@ -35,39 +58,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingHorizontal: 12,
   },
-  footer: {
-    paddingHorizontal: 12,
-    paddingBottom: 24,
-    alignItems: "center",
-  },
-  footerText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.red,
-  },
-  createMenu: {
+  tableHeader: {
     flexDirection: 'row',
-    backgroundColor: Colors.lightGray,
-    padding: 12,
-    justifyContent: 'space-between',
-    width: '90%', 
-    height: '12%',
-    alignSelf: 'center',
-    borderRadius: 8,
-    marginBottom: 12
+    borderBottomWidth: '3%',
+    justifyContent: 'space-between'
   },
-  createMenuButton: {
-    backgroundColor: Colors.red,
-    padding: 12,
-    borderRadius: 8,
-    width: '30%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center', 
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
+  tableHeaderText: {
     fontWeight: 'bold',
-  },
+    fontSize: '16',
+    marginBottom:'3%'
+  }
 });

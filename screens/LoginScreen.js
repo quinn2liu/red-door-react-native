@@ -24,7 +24,6 @@ export const LoginScreen = ({ navigation }) => {
     <>
       <View isSafe style={styles.container}>
         <KeyboardAwareScrollView >
-          {/* LogoContainer: consist app logo and screen title */}
           <View style={styles.logoContainer}>
             <Logo uri={Images.logo} />
           </View>

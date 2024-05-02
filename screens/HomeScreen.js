@@ -1,7 +1,8 @@
 import React from "react";
 import { View, StyleSheet, Button, Text, TouchableOpacity } from "react-native";
 import { signOut } from "firebase/auth";
-import Footer from "../components/Footer";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
 import { Images, Colors, auth } from "../config";
 
 export const HomeScreen = ({ navigation }) => {
@@ -13,26 +14,19 @@ export const HomeScreen = ({ navigation }) => {
     navigation.navigate("AddItem");
   }
 
-  const viewPullLists = () => {
-    navigation.navigate("CreatePull")
-  }
-
   const viewAccountDetails = () => {
     
   }
 
   const viewInventory = () => {
-    
+    navigation.navigate('ViewInventory');
   }
   return (
     <View style={styles.container}>
-
+      <Header/>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.createMenuButton} onPress={addItem}>
           <Text style={styles.buttonText} numberOfLines={1}>+ Add Item</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.createMenuButton} onPress={viewPullLists}>
-          <Text style={styles.buttonText} numberOfLines={2}>+ Create Pull List</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.createMenuButton} onPress={viewAccountDetails}>
           <Text style={styles.buttonText} numberOfLines={2}>Account Details</Text>
@@ -44,19 +38,7 @@ export const HomeScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>View Inventory</Text>
         </TouchableOpacity>
       </View>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.wideButton} onPress={viewInventory}>
-          <Text style={styles.buttonText}>See Pull Lists</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Red Door Inventory Manager</Text>
-        <TouchableOpacity onPress={handleLogout} style={styles.footerText}>
-            <Text style={{color: Colors.blue}}>Sign Out</Text>
-        </TouchableOpacity> 
-      </View>
+      <Footer/>
     </View>
   );
 };
@@ -66,19 +48,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 72,
     backgroundColor: Colors.white,
-  },
-  footer: {
-    paddingHorizontal: 12,
-    paddingBottom: 24,
-    alignItems: "center",
-    justifyContent:'center',
-    flexDirection: 'row',
-  },
-  footerText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.red,
-    paddingHorizontal: 4
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -95,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.red,
     padding: 12,
     borderRadius: 8,
-    width: '30%',
+    width: '48%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center', 

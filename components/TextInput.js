@@ -7,10 +7,10 @@ import { Button } from './Button';
 import { Colors } from '../config';
 
 export const TextInput = ({
-  width = '100%',
   leftIconName,
   rightIcon,
   handlePasswordVisibility,
+  width,
   ...otherProps
 }) => {
   return (
@@ -37,7 +37,6 @@ export const TextInput = ({
       <RNTextInput
         style={{
           flex: 1,
-          width: '100%',
           fontSize: 18,
           color: Colors.black
         }}

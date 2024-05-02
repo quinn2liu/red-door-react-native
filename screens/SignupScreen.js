@@ -37,10 +37,11 @@ export const SignupScreen = ({ navigation }) => {
           <Logo uri={Images.logo} />
           <Text style={styles.screenTitle}>Create a new account!</Text>
         </View>
-        {/* Formik Wrapper */}
         <Formik
           initialValues={{
             email: "",
+            first: "",
+            last: "",
             password: "",
             confirmPassword: "",
           }}
@@ -56,7 +57,6 @@ export const SignupScreen = ({ navigation }) => {
             handleBlur,
           }) => (
             <>
-              {/* Input fields */}
               <TextInput
                 name="email"
                 leftIconName="email"
@@ -106,11 +106,9 @@ export const SignupScreen = ({ navigation }) => {
                 error={errors.confirmPassword}
                 visible={touched.confirmPassword}
               />
-              {/* Display Screen Error Messages */}
               {errorState !== "" ? (
                 <FormErrorMessage error={errorState} visible={true} />
               ) : null}
-              {/* Signup button */}
               <Button style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Signup</Text>
               </Button>

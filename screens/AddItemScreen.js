@@ -1,22 +1,19 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Button } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { signOut } from "firebase/auth";
 import { TextInput } from "../components";
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Formik } from 'formik';
 import { db } from "../config/firebase";
 import { collection, addDoc } from "firebase/firestore"; 
-
-import { Colors, auth } from "../config";
+import { Footer } from '../components/Footer';
+import { Header } from '../components/Header';
+import { Colors } from "../config";
 
 export const AddItemScreen = ({ navigation }) => {
-    const handleLogout = () => {
-        signOut(auth).catch((error) => console.log("Error logging out: ", error));
-    };
+
 
     const [open1, setOpen1] = useState(false);
-    const [type, setType] = useState(null);
+    const [type, setType] = useState('');
     const [types, initializeTypes] = useState([
         {label: 'Chair', value: 'chair'},
         {label: 'Couch', value: 'couch'},
@@ -27,47 +24,56 @@ export const AddItemScreen = ({ navigation }) => {
     ]);
 
     const [open2, setOpen2] = useState(false);
-    const [material, setMaterial] = useState(null);
+    const [material, setMaterial] = useState('');
     const [materials, initMaterials] = useState([
         {label: 'Wood', value: 'wood'},
         {label: 'Plastic', value: 'plastic'},
         {label: 'Metal', value: 'metal'},
-        {label: 'Desk', value: 'desk'},
+        {label: 'Glass', value: 'glass'},
+    ]);
+
+    const [open4, setOpen4] = useState(false);
+    const [color, setColor] = useState('');
+    const [colors, initColors] = useState([
+      {label: 'Red', value: 'red'},
+      {label: 'Orange', value: 'orange'},
+      {label: 'Yellow', value: 'yellow'},
+      {label: 'Green', value: 'green'},
+      {label: 'Blue', value: 'blue'},
+      {label: 'Violet', value: 'violet'},
+      {label: 'Black', value: 'black'},
+      {label: 'White', value: 'white'}
     ]);
 
 
     const handleAddItem = async (values) => {
-        const { type, material, custom1 } = values;
-        console.log(`type: ${type}, material: ${material}, custom1: ${custom1}`);
-        // try {
-        //     const docRef = await addDoc(collection(db, "furniture"), {
-        //       type: type,
-        //       primary_material: material,
-        //     });
-        //     console.log("Document written with ID: ", docRef.id);
-        //   } catch (e) {
-        //     console.error("Error adding document: ", e);
-        //   }
+        const { type, material, custom, length, width, height, color } = values;
+        // console.log(`type: ${type}, material: ${material}, custom: ${custom}, length: ${length}, width: ${width}, height: ${height}, color: ${color}`);
+        try {
+            const docRef = await addDoc(collection(db, "furniture"), {
+              type: type,
+              material: material,
+              custom_field: custom,
+              length: length,
+              width: width,
+              height: height,
+              color: color
+            });
+            console.log("Document written with ID: ", docRef.id);
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
     };
-
-    const goHome = () => {
-        navigation.navigate("Home");
-    };
-
   return (
     <View style={styles.container}>
+        <Header />
         <Formik
-            initialValues={{ type: '',  material: '', custom1: ''}}
+            initialValues={{ type: '',  material1: '', custom: '', length: '', width: '', height: ''}}
             onSubmit={values => handleAddItem(values)}
         >
         {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, touched, errors }) => (
-        <>
-            <TextInput
-                placeholder="Custom Field 1"
-                value={values.custom1}
-                onChangeText={item => setFieldValue('custom1', item)}
-              />
-            <View style={{flexDirection: 'row', width:'51%', justifyContent: 'space-between', marginBottom:144}}>
+          <>
+            <View style={styles.dropdownRow}>
               <DropDownPicker
                   open={open1}
                   value={type}
@@ -77,9 +83,10 @@ export const AddItemScreen = ({ navigation }) => {
                   setItems={initializeTypes}
                   onChangeValue={item => setFieldValue('type', item)}
                   placeholder="Type"
-                  zIndex={3000}
-                  zIndexInverse={3000}
                   style={{width: '95%'}}
+                  maxHeight={150}
+                  zIndex={3000}
+                  zIndexInverse={1000}
               />
               <DropDownPicker
                   open={open2}
@@ -89,19 +96,108 @@ export const AddItemScreen = ({ navigation }) => {
                   setValue={setMaterial}
                   setItems={initMaterials}
                   onChangeValue={item => setFieldValue('material', item)}
-                  placeholder="Material 1"
+                  placeholder="Material"
+                  style={{width: '95%'}}
+                  maxHeight={150}
                   zIndex={2500}
                   zIndexInverse={2500}
-                  style={{width: '95%'}}
               />
             </View>
-            <Button title="Submit" onPress={handleSubmit} />
-        </>
+            { (open1 || open2) ? (
+              <View style={{paddingTop:140}}>
+                <View style={styles.textRow}>
+                  <TextInput
+                    placeholder="Length"
+                    value={values.length}
+                    onChangeText={item => setFieldValue('length', item)}
+                    width={'49%'}
+                  />
+                  <TextInput
+                    placeholder="Width"
+                    value={values.width}
+                    onChangeText={item => setFieldValue('width', item)}
+                    width={'49%'}
+                  />
+                </View>
+                <View style={styles.textRow}>
+                  <TextInput
+                    placeholder="Height"
+                    value={values.height}
+                    onChangeText={item => setFieldValue('height', item)}
+                    width={'49%'}
+                  />
+                  <TextInput
+                    placeholder="Custom Field"
+                    value={values.custom}
+                    onChangeText={item => setFieldValue('custom', item)}
+                    width={'49%'}
+                  />
+                </View>
+                <DropDownPicker
+                  open={open4}
+                  value={color}
+                  items={colors}
+                  setOpen={setOpen4}
+                  setValue={setColor}
+                  setItems={initColors}
+                  onChangeValue={item => setFieldValue('color', item)}
+                  placeholder="Color"
+                  style={{width: '95%'}}
+                  maxHeight={150}
+                />
+                <Button title="Submit" onPress={handleSubmit} />
+              </View>
+            ) : (
+              <>
+                  <View style={styles.textRow}>
+                    <TextInput
+                      placeholder="Length"
+                      value={values.length}
+                      onChangeText={item => setFieldValue('length', item)}
+                      width={'49%'}
+                    />
+                    <TextInput
+                      placeholder="Width"
+                      value={values.width}
+                      onChangeText={item => setFieldValue('width', item)}
+                      width={'49%'}
+                    />
+                  </View>
+                  <View style={styles.textRow}>
+                    <TextInput
+                      placeholder="Height"
+                      value={values.height}
+                      onChangeText={item => setFieldValue('height', item)}
+                      width={'49%'}
+                    />
+                    <TextInput
+                      placeholder="Custom Field"
+                      value={values.custom}
+                      onChangeText={item => setFieldValue('custom', item)}
+                      width={'49%'}
+                    />
+                  </View>
+                  <DropDownPicker
+                    open={open4}
+                    value={color}
+                    items={colors}
+                    setOpen={setOpen4}
+                    setValue={setColor}
+                    setItems={initColors}
+                    onChangeValue={item => setFieldValue('color', item)}
+                    placeholder="Color"
+                    maxHeight={150}
+                    zIndex={1000}
+                    zIndexInverse={3000}
+                  />
+                  <Button title="Submit" onPress={handleSubmit} />
+                </> 
+            )
+            }
+          </>
         )}
         </Formik>
-        <TouchableOpacity style={styles.createMenuButton} onPress={goHome}>
-            <Text style={styles.buttonText} numberOfLines={1}>Home</Text>
-        </TouchableOpacity>
+        <Footer />
     </View>
   );
 };
@@ -113,45 +209,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingHorizontal: 12,
   },
-  footer: {
-    paddingHorizontal: 12,
-    paddingBottom: 24,
-    alignItems: "center",
-  },
-  footerText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.red,
-  },
-  createMenu: {
-    flexDirection: 'row',
-    backgroundColor: Colors.lightGray,
-    padding: 12,
+  dropdownRow: {
+    flexDirection: 'row', 
+    width:'51%', 
     justifyContent: 'space-between',
-    width: '90%', 
-    height: '12%',
-    alignSelf: 'center',
-    borderRadius: 8,
-    marginBottom: 12
+    marginBottom:16
   },
-  createMenuButton: {
-    backgroundColor: Colors.red,
-    padding: 12,
-    borderRadius: 8,
-    width: '30%',
-    height: '20%',
-    justifyContent: 'center',
-    alignItems: 'center', 
-  },
-  viewInventoryButton: {
-
-  },
-  jobListButton: {
-
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
+  textRow: {
+    flexDirection: 'row', 
+    width:'100%', 
+    justifyContent: 'space-between',
+  }
 });
