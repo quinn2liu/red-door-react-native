@@ -15,7 +15,7 @@ export const HomeScreen = ({ navigation }) => {
   }
 
   const viewAccountDetails = () => {
-    
+    navigation.navigate('ViewAccount');
   }
 
   const viewInventory = () => {

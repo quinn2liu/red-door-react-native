@@ -9,20 +9,26 @@ import { collection, getDocs } from "firebase/firestore";
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { InventoryItem } from "../components/InventoryItem";
+import { useFocusEffect } from '@react-navigation/native';
 
 import { Colors, auth } from "../config";
 
 export const ViewInventoryScreen = ({ navigation }) => {
   const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getDocs(collection(db, 'furniture'));
-      setItems(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-  };
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        const data = await getDocs(collection(db, 'furniture'));
+        setItems(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+
+      // Return a cleanup function to reset state when screen is unfocused
+      return () => setItems([]);
+    }, [])
+  );
     
     return (
         <View style={styles.container}>
@@ -43,7 +49,7 @@ export const ViewInventoryScreen = ({ navigation }) => {
           </View>
           {items.map(item => (
             <View key={item.id}>
-              <InventoryItem id={item.id} type={item.type} material={item.material} length={item.length} width={item.width} height={item.height} custom={item.custom} color={item.color} />
+              <InventoryItem id={item.id} type={item.type} material={item.material} length={item.length} width={item.width} height={item.height} custom={item.custom_field} color={item.color} />
             </View>
           ))}
           <Footer/>
@@ -65,7 +71,7 @@ const styles = StyleSheet.create({
   },
   tableHeaderText: {
     fontWeight: 'bold',
-    fontSize: '16',
+    fontSize: 16,
     marginBottom:'3%'
   }
 });

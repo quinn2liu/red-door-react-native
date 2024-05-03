@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text } from "react-native";
 import { Formik } from "formik";
-import { sendPasswordResetEmail } from "firebase/auth";
+import { sendPasswordResetEmail, signOut } from "firebase/auth";
 
 import { passwordResetSchema } from "../utils";
 import { Colors, auth } from "../config";

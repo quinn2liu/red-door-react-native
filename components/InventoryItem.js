@@ -8,7 +8,8 @@ export const InventoryItem = ({ id, type, material, length, width, height, custo
     const dimensions = parseInt(length) * parseInt(width) * parseInt(height);
 
     const onPress = () => {
-        navigation.navigate('ItemPage', 
+        console.log(`id: ${id}`)
+        navigation.navigate('ItemPage', { 
         id,
         type, 
         material, 
@@ -16,7 +17,8 @@ export const InventoryItem = ({ id, type, material, length, width, height, custo
         width, 
         height, 
         custom, 
-        color);
+        color
+    });
     }
 
     return (
